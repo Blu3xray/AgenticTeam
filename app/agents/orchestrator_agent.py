@@ -30,8 +30,8 @@ class OrchestratorAgent(Agent):
         self.model_name = descriptor.config.metadata.get("model", "gpt-4")
 
     async def handle_message(self, message: A2AMessage) -> None:
-        """Process user request to manage agents."""
-        user_request = message.payload.get("prompt") or message.payload.get("content")
+        """Process incoming messages to manage agents."""
+        user_request = message.payload.get("content")
         session_id = message.payload.get("session_id", "default")
 
         if not user_request:

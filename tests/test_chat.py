@@ -1,4 +1,4 @@
-"""Integration tests for orchestrator chat and session capabilities."""
+/home/blu3xray/AgenticTeam/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000"""Integration tests for orchestrator chat and session capabilities."""
 from __future__ import annotations
 
 import asyncio

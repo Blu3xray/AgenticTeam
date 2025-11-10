@@ -50,6 +50,28 @@ uvicorn app.main:app --reload
 
 **📖 Full guide:** See [docs/getting-started.md](docs/getting-started.md)
 
+## Azure Deployment 🚀
+
+Deploy to Azure in minutes! Choose your path:
+
+### Quick Deploy (5 minutes)
+```bash
+# One-command deployment to Azure Container Apps
+./deploy-azure.sh
+```
+
+### Documentation
+- **[Azure Deploy Tutorial](docs/azure-deploy-tutorial.md)** - Step-by-step guide (START HERE!)
+- **[Azure Hosting Options](docs/azure-hosting-options.md)** - Compare all Azure options
+- **[Azure Deployment Guide](docs/azure-deployment.md)** - Technical details & Bicep IaC
+
+### What You Get
+- ✅ Public HTTPS URL
+- ✅ Auto-scaling (1-10 replicas)
+- ✅ Monitoring & logs
+- ✅ GitHub Actions CI/CD
+- ✅ Costs: ~$20-100/month
+
 ## API Endpoints
 
 ### Chat Interface
@@ -77,14 +99,26 @@ uvicorn app.main:app --reload
 
 ## Documentation
 
+### Getting Started
 - [Getting Started](docs/getting-started.md) – **Start here!** Complete setup and first steps
 - [Overview](docs/overview.md) – Platform capabilities and architecture summary
 - [Chat Interface](docs/chat-interface.md) – Natural language control guide
+
+### Deployment
+- **[Azure Deploy Tutorial](docs/azure-deploy-tutorial.md)** – Step-by-step deployment guide
+- **[Azure Hosting Options](docs/azure-hosting-options.md)** – Compare Container Apps, App Service, AKS
+- [Azure Deployment](docs/azure-deployment.md) – Production deployment with Bicep
+
+### Development
 - [Architecture](docs/architecture.md) – Component design and data flow
 - [Operations](docs/operations.md) – API reference and testing
 - [Extension Guide](docs/extension-guide.md) – How to add features
-- [Azure Deployment](docs/azure-deployment.md) – Production deployment
 - [Roadmap](docs/roadmap.md) – Planned enhancements
+
+### Advanced
+- [Migration to Production](docs/migration-to-production.md) – Mock to real implementation
+- [MCP Quick Start](docs/mcp-quickstart.md) – Real MCP server integration
+- [Verification Report](docs/verification-report.md) – Testing and validation results
 
 ## Project Structure
 

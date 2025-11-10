@@ -1,6 +1,7 @@
 """Application runtime composition helpers."""
 from __future__ import annotations
 
+import asyncio
 from functools import lru_cache
 from typing import Optional
 
@@ -46,6 +47,16 @@ def get_llm_pool() -> LLMPool:
             "gpt-35-turbo",
             config.azure_openai,
         )
+    else:
+        # Fallback to mock models when no Azure OpenAI is configured
+        from app.services.llm_pool import MockLLMClient
+
+        pool._clients["gpt-4"] = MockLLMClient("gpt-4")
+        pool._clients["gpt-35-turbo"] = MockLLMClient("gpt-35-turbo")
+        pool._semaphores["gpt-4"] = asyncio.Semaphore(50)
+        pool._semaphores["gpt-35-turbo"] = asyncio.Semaphore(50)
+        pool._initialized["gpt-4"] = True
+        pool._initialized["gpt-35-turbo"] = True
 
     return pool
 
