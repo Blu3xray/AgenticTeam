@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import uuid
-from typing import Dict, Iterable, Optional, Type
+from typing import Any, Dict, Iterable, Optional, Type
 
 from app.agents.base import Agent
 from app.core.message_bus import A2AMessageBus
@@ -26,6 +26,11 @@ class Orchestrator:
         self._agent_catalog = agent_catalog
         self._agents: Dict[str, Agent] = {}
         self._lock = asyncio.Lock()
+        self._llm_pool: Optional[Any] = None  # Lazy loaded
+
+    def set_llm_pool(self, llm_pool: Any) -> None:
+        """Set the LLM pool for agents that need it."""
+        self._llm_pool = llm_pool
 
     async def spawn_agent(self, config: AgentConfig) -> AgentDescriptor:
         """Create and start an agent based on the provided configuration."""
@@ -37,7 +42,19 @@ class Orchestrator:
             config=config,
             state=AgentState.SPAWNING,
         )
-        agent = agent_cls(descriptor, self._bus)
+
+        # Pass LLM pool to agents that need it
+        if self._llm_pool and hasattr(agent_cls, "__init__"):
+            import inspect
+
+            sig = inspect.signature(agent_cls.__init__)
+            if "llm_pool" in sig.parameters:
+                agent = agent_cls(descriptor, self._bus, self._llm_pool)
+            else:
+                agent = agent_cls(descriptor, self._bus)
+        else:
+            agent = agent_cls(descriptor, self._bus)
+
         async with self._lock:
             self._agents[descriptor.agent_id] = agent
         await agent.start()
@@ -64,6 +81,30 @@ class Orchestrator:
     def get_agent(self, agent_id: str) -> Optional[AgentDescriptor]:
         agent = self._agents.get(agent_id)
         return agent.descriptor if agent else None
+
+    def list_agents_by_session(self, session_id: str) -> Iterable[AgentDescriptor]:
+        """Return agents belonging to a specific session."""
+        return (
+            agent.descriptor
+            for agent in self._agents.values()
+            if agent.descriptor.config.metadata.get("session_id") == session_id
+        )
+
+    async def terminate_session(self, session_id: str) -> None:
+        """Terminate all agents for a given session."""
+        async with self._lock:
+            session_agents = [
+                (agent_id, agent)
+                for agent_id, agent in self._agents.items()
+                if agent.descriptor.config.metadata.get("session_id") == session_id
+            ]
+            for agent_id, _ in session_agents:
+                self._agents.pop(agent_id)
+
+        # Stop agents outside the lock to avoid blocking
+        await asyncio.gather(
+            *(agent.stop() for _, agent in session_agents), return_exceptions=True
+        )
 
     async def dispatch(self, sender_id: str, recipient_id: Optional[str], payload: dict) -> None:
         """Send an A2A message on behalf of a caller."""
