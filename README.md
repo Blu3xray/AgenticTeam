@@ -14,35 +14,41 @@ Production-ready platform where an orchestrator dynamically provisions AI agents
 
 ## Quick Start
 
-1. **Setup environment:**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-   pip install -e .[dev]
-   ```
+```bash
+# 1. Clone and setup
+git clone https://github.com/Blu3xray/AgenticTeam.git
+cd AgenticTeam
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install -e .[dev]
 
-2. **Configure (optional - works with mocks if not set):**
-   ```bash
-   export AZURE_OPENAI_KEY="your-key"
-   export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
-   ```
+# 2. Start server (works with mock LLM, no API keys needed)
+uvicorn app.main:app --reload
 
-3. **Start API service:**
-   ```bash
-   uvicorn app.main:app --reload
-   ```
+# 3. Chat with orchestrator
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Create a new LLM agent", "session_id": "demo"}'
 
-4. **Chat with orchestrator:**
-   ```bash
-   curl -X POST http://localhost:8000/chat \
-     -H "Content-Type: application/json" \
-     -d '{"message": "Create a new LLM agent for me"}'
-   ```
+# 4. Interactive API docs
+open http://localhost:8000/docs
+```
 
-5. **Run tests:**
-   ```bash
-   python -m pytest
-   ```
+### With Azure OpenAI (Optional)
+
+```bash
+# Create .env file
+cp .env.example .env
+# Edit .env with your Azure OpenAI credentials
+
+# Install dotenv support
+pip install python-dotenv
+
+# Restart server
+uvicorn app.main:app --reload
+```
+
+**📖 Full guide:** See [docs/getting-started.md](docs/getting-started.md)
 
 ## API Endpoints
 
@@ -71,10 +77,14 @@ Production-ready platform where an orchestrator dynamically provisions AI agents
 
 ## Documentation
 
-- [Overview](docs/overview.md) – entry point
-- [Architecture](docs/architecture.md) – component design
-- [Operations](docs/operations.md) – runtime & API usage
-- [Roadmap](docs/roadmap.md) – planned enhancements
+- [Getting Started](docs/getting-started.md) – **Start here!** Complete setup and first steps
+- [Overview](docs/overview.md) – Platform capabilities and architecture summary
+- [Chat Interface](docs/chat-interface.md) – Natural language control guide
+- [Architecture](docs/architecture.md) – Component design and data flow
+- [Operations](docs/operations.md) – API reference and testing
+- [Extension Guide](docs/extension-guide.md) – How to add features
+- [Azure Deployment](docs/azure-deployment.md) – Production deployment
+- [Roadmap](docs/roadmap.md) – Planned enhancements
 
 ## Project Structure
 

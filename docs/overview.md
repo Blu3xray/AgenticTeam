@@ -12,9 +12,10 @@ Production-ready platform where an orchestrator dynamically provisions AI agents
 
 ## Documentation
 
+- **Getting Started:** `docs/getting-started.md` – **start here** for installation and setup
+- **Chat Interface:** `docs/chat-interface.md` – natural language control guide
 - **Architecture:** `docs/architecture.md` – component design and data flow
 - **Operations:** `docs/operations.md` – API usage, deployment, and testing
-- **Chat Interface:** `docs/chat-interface.md` – natural language control guide
 - **Extension Guide:** `docs/extension-guide.md` – how to add features
 - **Azure Deployment:** `docs/azure-deployment.md` – production deployment
 - **Roadmap:** `docs/roadmap.md` – planned enhancements
